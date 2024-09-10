@@ -6,7 +6,7 @@ from logging.handlers import RotatingFileHandler
 
 # Define various configs
 hr_levels=["IC5","IC6","IC7"]
-exclude_titles=["Software Engineer", "Scientist", "Research", "Architect", "Product Manager"]
+include_titles=["Product Manager"]
 max_log_size = 50 * 1024  # Limit it to 50KB
 backup_count = 3  # Keep 3 backup files
 
@@ -56,7 +56,7 @@ if response.status_code == 200:
     all_jobs = data.get('operationResult', {}).get('result', {}).get('jobs', [])
 
     # Exclude the jobs that you don't want
-    jobs = [job for job in all_jobs if not any(exclude in job.get('title', '') for exclude in exclude_titles)]
+    jobs = [job for job in all_jobs if any(include in job.get('title', '') for include in include_titles)]
 
     # Get the total page size we will have to parse
     job_total = data.get('operationResult', {}).get('result', {}).get('totalJobs')
@@ -95,7 +95,7 @@ if total_pages > 1:
             all_jobs = data.get('operationResult', {}).get('result', {}).get('jobs', [])
 
             # Exclude the jobs that you don't want
-            jobs = [job for job in all_jobs if not any(exclude in job.get('title', '') for exclude in exclude_titles)]
+            jobs = [job for job in all_jobs if any(include in job.get('title', '') for include in include_titles)]
 
             # Grab the Job IDs (or handle the data as needed)
             if jobs:
